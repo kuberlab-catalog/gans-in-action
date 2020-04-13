@@ -4,7 +4,7 @@ storage:
    name: "Storage Configuration"
    kind: cluster_storage
 
-src:
+chapters:
   value: https://github.com/kuberlab-catalog/gans-in-action/tree/master/chapters
   accountId: ''
   revision: ''

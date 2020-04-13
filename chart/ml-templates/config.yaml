@@ -11,7 +11,7 @@ spec:
     manager: "pip{{.python_version.value}}"
   default_mount_path: "/notebooks"
   tasks:
-  - name: run-lesson
+  - name: run-chapter
     resources:
     - name: worker
       replicas: 1
@@ -19,10 +19,10 @@ spec:
       maxRestartCount: 0
       allowFail: true
       images:
-        gpu: "kuberlab/fastai:latest-gpu"
-        cpu: "kuberlab/fastai:latest-cpu"
-      command: "jupyter nbconvert $LESSONS_DIR/lesson2-sgd.ipynb --execute --to html --stdout --ExecutePreprocessor.timeout=-1 | python submit_report.py"
-      workdir: "$SRC_DIR"
+        cpu: "kuberlab/tensorflow:cpu-36-1.14-full"
+        gpu: "kuberlab/tensorflow:gpu-36-1.14-full"
+      command: "jupyter nbconvert chapter-2/Chapter_2_Autoencoder.ipynb --execute --to html --stdout --ExecutePreprocessor.timeout=-1 | python tools/submit_report.py"
+      workdir: "$CHAPTERS_DIR"
       resources:
         accelerators:
         {{- if .useGPU.value }}
@@ -64,12 +64,12 @@ spec:
     default_volume_mapping: true
   volumes:
   - gitRepo:
-      repository: {{ gitRepo .src.value }}
-      accountId: '{{ .src.accountId }}'
-      revision: '{{ .src.revision }}'
+      repository: {{ gitRepo .chapters.value }}
+      accountId: '{{ .chapters.accountId }}'
+      revision: '{{ .chapters.revision }}'
     isLibDir: false
-    name: src
-    subPath: {{ gitSubPath .src.value }}
+    name: chapters
+    subPath: {{ gitSubPath .chapters.value }}
   - isLibDir: true
     name: lib
     clusterStorage: {{ .storage.value }}
