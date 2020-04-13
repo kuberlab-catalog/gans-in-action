@@ -1,0 +1,24 @@
+storage:
+ value: default
+ wizard:
+   name: "Storage Configuration"
+   kind: cluster_storage
+
+src:
+  value: https://github.com/kuberlab-catalog/kuberlab-catalog/tree/master/chapters
+  accountId: ''
+  revision: ''
+  wizard:
+    name: "Chapters source"
+    kind: git
+
+useGPU:
+  value: false
+  wizard:
+    name: Enable GPU in Jupyter
+    kind: boolean
+
+# Pip packages may be specified here in format that pip accepts.
+packages: []
+python_version:
+ value: 3

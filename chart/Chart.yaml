@@ -1,0 +1,16 @@
+Description: GANs-in-Action
+Engine: gotpl
+Home: http://kuberlab.com
+Icon: https://storage.googleapis.com/kuberlab-images/fastai.jpg
+Keywords:
+- tensorglow
+- book
+- tutorial
+- template
+- GAN
+Maintainers:
+- Email: monstarnn@gmail.com
+  Name: Vadim Grishin
+Name: gans-in-action
+Version: 1.0.0
+Type: mlapp-v2

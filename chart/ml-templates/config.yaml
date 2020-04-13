@@ -1,0 +1,84 @@
+kind: MLApp
+metadata:
+  name: gans-in-action
+spec:
+  package_manager: "pip{{.python_version.value}}"
+  packages:
+  - names:
+    {{- range $i, $value := .packages }}
+    - "{{ $value }}"
+    {{- end }}
+    manager: "pip{{.python_version.value}}"
+  default_mount_path: "/notebooks"
+  tasks:
+  - name: run-lesson
+    resources:
+    - name: worker
+      replicas: 1
+      restartPolicy: Never
+      maxRestartCount: 0
+      allowFail: true
+      images:
+        gpu: "kuberlab/fastai:latest-gpu"
+        cpu: "kuberlab/fastai:latest-cpu"
+      command: "jupyter nbconvert $LESSONS_DIR/lesson2-sgd.ipynb --execute --to html --stdout --ExecutePreprocessor.timeout=-1 | python submit_report.py"
+      workdir: "$SRC_DIR"
+      resources:
+        accelerators:
+        {{- if .useGPU.value }}
+          gpu: 1
+        {{- else }}
+          gpu: 0
+        {{- end }}
+        requests:
+          cpu: "1"
+          memory: 1Gi
+        limits:
+          cpu: "2"
+          memory: 4Gi
+      default_volume_mapping: true
+  uix:
+  - name: jupyter
+    displayName: Jupyter
+    images:
+      cpu: "kuberlab/tensorflow:cpu-36-1.14-full"
+      gpu: "kuberlab/tensorflow:gpu-36-1.14-full"
+    resources:
+      accelerators:
+      {{- if .useGPU.value }}
+        gpu: 1
+      {{- else }}
+        gpu: 0
+      {{- end }}
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+    ports:
+    - port: 8888
+      targetPort: 8888
+      protocol: TCP
+      name: http
+    default_volume_mapping: true
+  volumes:
+  - gitRepo:
+      repository: {{ gitRepo .src.value }}
+      accountId: '{{ .src.accountId }}'
+      revision: '{{ .src.revision }}'
+    isLibDir: false
+    name: src
+    subPath: {{ gitSubPath .src.value }}
+  - isLibDir: true
+    name: lib
+    clusterStorage: {{ .storage.value }}
+  - mountPath: /notebooks
+    name: code
+    subPath: code
+    clusterStorage: {{ .storage.value }}
+  - mountPath: /dev/shm
+    name: shared
+    emptyDir:
+      sizeLimit: 8096Mi
+      medium: Memory
