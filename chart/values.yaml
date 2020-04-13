@@ -19,6 +19,9 @@ useGPU:
     kind: boolean
 
 # Pip packages may be specified here in format that pip accepts.
-packages: []
+packages:
+  - tensorflow-hub==0.8.0
+  - imageio==2.8.0
+  - foolbox==2.0.0
 python_version:
  value: 3
