@@ -1,9 +1,9 @@
-Description: GANs-in-Action
+Description: "GANs in Action: Deep learning with Generative Adversarial Networks"
 Engine: gotpl
 Home: http://kuberlab.com
 Icon: https://raw.githubusercontent.com/kuberlab-catalog/gans-in-action/master/chart/cover.jpg
 Keywords:
-- tensorglow
+- tensorflow
 - book
 - tutorial
 - template
